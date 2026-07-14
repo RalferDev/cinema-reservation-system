@@ -1,0 +1,13 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Maven
+target/
+*/target/
+
+# OS & Docker
+.DS_Store
+catalog_data/
+booking_data/
