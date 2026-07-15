@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +63,49 @@ public class BookingService {
             throw new RuntimeException("Impossibile cancellare: Prenotazione non trovata con ID: " + id);
         }
         reservationRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Reservation createAutoReservation(Long showtimeId, String customerName, String customerEmail) {
+
+        ShowtimeClientDto showtime;
+        try {
+            showtime = catalogClient.getShowtime(showtimeId);
+        } catch (Exception e) {
+            throw new RuntimeException("Impossibile recuperare i dettagli dello spettacolo dal Catalogo (ID: " + showtimeId + ")");
+        }
+
+        if (showtime.getRoom() == null || showtime.getRoom().getCapacity() == null) {
+            throw new RuntimeException("Dati sulla capienza della sala non disponibili per questo spettacolo.");
+        }
+
+        int capacity = showtime.getRoom().getCapacity();
+
+        List<Reservation> existingReservations = reservationRepository.findByShowtimeId(showtimeId);
+        Set<Long> occupiedSeats = existingReservations.stream()
+                .map(Reservation::getSeatId)
+                .collect(Collectors.toSet());
+
+        Long firstAvailableSeat = null;
+        for (long i = 1; i <= capacity; i++) {
+            if (!occupiedSeats.contains(i)) {
+                firstAvailableSeat = i;
+                break;
+            }
+        }
+
+        if (firstAvailableSeat == null) {
+            throw new RuntimeException("Ci dispiace, lo spettacolo è interamente sold out!");
+        }
+
+        Reservation reservation = Reservation.builder()
+                .showtimeId(showtimeId)
+                .seatId(firstAvailableSeat)
+                .customerName(customerName)
+                .customerEmail(customerEmail)
+                .price(showtime.getPrice())
+                .build();
+
+        return reservationRepository.save(reservation);
     }
 }

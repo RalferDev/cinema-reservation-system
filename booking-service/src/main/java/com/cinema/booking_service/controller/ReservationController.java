@@ -19,15 +19,26 @@ public class ReservationController {
 
     private final BookingService bookingService;
 
-    // POST /api/reservations - Acquista un biglietto
+    // POST /api/reservations - Acquista un biglietto (con o senza posto specificato)
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto request) {
-        Reservation reservation = bookingService.createReservation(
-                request.getShowtimeId(),
-                request.getSeatId(),
-                request.getCustomerName(),
-                request.getCustomerEmail()
-        );
+        Reservation reservation;
+
+        if (request.getSeatId() == null) {
+            reservation = bookingService.createAutoReservation(
+                    request.getShowtimeId(),
+                    request.getCustomerName(),
+                    request.getCustomerEmail()
+            );
+        } else {
+            reservation = bookingService.createReservation(
+                    request.getShowtimeId(),
+                    request.getSeatId(),
+                    request.getCustomerName(),
+                    request.getCustomerEmail()
+            );
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ReservationResponseDto.fromEntity(reservation));
     }
@@ -61,4 +72,5 @@ public class ReservationController {
         bookingService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
+
 }

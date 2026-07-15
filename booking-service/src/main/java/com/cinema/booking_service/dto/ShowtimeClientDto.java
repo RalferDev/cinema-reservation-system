@@ -14,4 +14,5 @@ public class ShowtimeClientDto {
     private Long id;
     private BigDecimal price;
     private LocalDateTime startTime;
+    private RoomClientDto room;
 }
