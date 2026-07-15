@@ -48,4 +48,8 @@ public class ShowtimeService {
         return showtimeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Spettacolo non trovato con ID: " + id));
     }
+
+    public List<Showtime> getAllShowtimes() {
+        return showtimeRepository.findAll();
+    }
 }

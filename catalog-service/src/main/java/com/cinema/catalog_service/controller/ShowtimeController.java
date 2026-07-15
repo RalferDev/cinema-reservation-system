@@ -58,4 +58,13 @@ public class ShowtimeController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(showtimes);
     }
+
+    // GET /api/showtimes/all - Restituisce la lista di tutti gli spettacoli programmati
+    @GetMapping("/all")
+    public ResponseEntity<List<ShowtimeResponseDto>> getAllShowtimes() {
+        List<ShowtimeResponseDto> showtimes = showtimeService.getAllShowtimes().stream()
+                .map(ShowtimeResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(showtimes);
+    }
 }
