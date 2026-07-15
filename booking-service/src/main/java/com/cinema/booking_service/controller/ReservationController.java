@@ -47,4 +47,18 @@ public class ReservationController {
         Reservation reservation = bookingService.getReservationById(id);
         return ResponseEntity.ok(ReservationResponseDto.fromEntity(reservation));
     }
+
+    // GET /api/reservations/availability?showtimeId=1&seatId=5 - Verifica disponibilità posto
+    @GetMapping("/availability")
+    public ResponseEntity<Boolean> checkAvailability(@RequestParam Long showtimeId, @RequestParam Long seatId) {
+        boolean available = bookingService.isSeatAvailable(showtimeId, seatId);
+        return ResponseEntity.ok(available);
+    }
+
+    // DELETE /api/reservations/{id} - Cancella una prenotazione
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        bookingService.deleteReservation(id);
+        return ResponseEntity.noContent().build();
+    }
 }

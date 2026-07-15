@@ -50,4 +50,16 @@ public class BookingService {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Prenotazione non trovata con ID: " + id));
     }
+
+    public boolean isSeatAvailable(Long showtimeId, Long seatId) {
+        return !reservationRepository.existsByShowtimeIdAndSeatId(showtimeId, seatId);
+    }
+
+    @Transactional
+    public void deleteReservation(Long id) {
+        if (!reservationRepository.existsById(id)) {
+            throw new RuntimeException("Impossibile cancellare: Prenotazione non trovata con ID: " + id);
+        }
+        reservationRepository.deleteById(id);
+    }
 }
