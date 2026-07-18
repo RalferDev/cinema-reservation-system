@@ -16,8 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -153,5 +152,37 @@ class ReservationControllerTest {
                 .andExpect(jsonPath("$.id").value(2))
                 .andExpect(jsonPath("$.seatId").value(1))
                 .andExpect(jsonPath("$.customerName").value("Anna Neri"));
+    }
+
+    @Test
+    @DisplayName("POST /api/reservations/batch - Deve creare prenotazioni multiple e restituire Status 201 Created")
+    void createBatchReservations_ShouldReturnCreatedList() throws Exception {
+
+        ReservationRequestDto req1 = ReservationRequestDto.builder()
+                .showtimeId(10L)
+                .seatId(1L)
+                .customerName("Mario Rossi")
+                .customerEmail("mario@example.com")
+                .build();
+
+        ReservationRequestDto req2 = ReservationRequestDto.builder()
+                .showtimeId(10L)
+                .seatId(2L)
+                .customerName("Mario Rossi")
+                .customerEmail("mario@example.com")
+                .build();
+
+        Reservation res1 = Reservation.builder().id(1L).showtimeId(10L).seatId(1L).price(BigDecimal.valueOf(10.0)).build();
+        Reservation res2 = Reservation.builder().id(2L).showtimeId(10L).seatId(2L).price(BigDecimal.valueOf(10.0)).build();
+
+        when(bookingService.createBatchReservations(any())).thenReturn(List.of(res1, res2));
+
+        mockMvc.perform(post("/api/reservations/batch")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(List.of(req1, req2))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.size()").value(2))
+                .andExpect(jsonPath("$[0].seatId").value(1))
+                .andExpect(jsonPath("$[1].seatId").value(2));
     }
 }

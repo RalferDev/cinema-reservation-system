@@ -1,6 +1,7 @@
 package com.cinema.booking_service.service;
 
 import com.cinema.booking_service.client.CatalogClient;
+import com.cinema.booking_service.dto.ReservationRequestDto;
 import com.cinema.booking_service.dto.ShowtimeClientDto;
 import com.cinema.booking_service.entity.Reservation;
 import com.cinema.booking_service.repository.ReservationRepository;
@@ -107,5 +108,27 @@ public class BookingService {
                 .build();
 
         return reservationRepository.save(reservation);
+    }
+
+    @Transactional
+    public List<Reservation> createBatchReservations(List<ReservationRequestDto> requests) {
+        return requests.stream()
+                .map(request -> {
+                    if (request.getSeatId() == null) {
+                        return createAutoReservation(
+                                request.getShowtimeId(),
+                                request.getCustomerName(),
+                                request.getCustomerEmail()
+                        );
+                    } else {
+                        return createReservation(
+                                request.getShowtimeId(),
+                                request.getSeatId(),
+                                request.getCustomerName(),
+                                request.getCustomerEmail()
+                        );
+                    }
+                })
+                .collect(Collectors.toList());
     }
 }

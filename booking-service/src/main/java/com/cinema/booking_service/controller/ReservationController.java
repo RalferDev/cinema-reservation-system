@@ -73,4 +73,13 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
+    // POST /api/reservations/batch - Acquista più biglietti/spettacoli contemporaneamente
+    @PostMapping("/batch")
+    public ResponseEntity<List<ReservationResponseDto>> createBatchReservations(@RequestBody List<ReservationRequestDto> requests) {
+        List<Reservation> reservations = bookingService.createBatchReservations(requests);
+        List<ReservationResponseDto> response = reservations.stream()
+                .map(ReservationResponseDto::fromEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }
