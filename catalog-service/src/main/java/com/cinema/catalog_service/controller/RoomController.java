@@ -23,7 +23,10 @@ public class RoomController {
     private final RoomService roomService;
 
     // POST /api/rooms - Crea una nuova sala e restituisce il DTO
-    @Operation(summary = "Crea una nuova sala", description = "Registra una nuova sala nel cinema specificando il nome, il numero totale di file e i posti per fila. La capienza totale viene calcolata automaticamente.")
+    @Operation(
+            summary = "Crea una nuova sala",
+            description = "Registra una nuova sala nel cinema specificando il nome, il numero totale di file e i posti per fila. La capienza totale viene calcolata automaticamente."
+    )
     @PostMapping
     public ResponseEntity<RoomResponseDto> createRoom(@RequestBody RoomRequestDto request) {
         Room createdRoom = roomService.createRoom(
@@ -36,7 +39,10 @@ public class RoomController {
     }
 
     // GET /api/rooms - Restituisce la lista di tutte le sale mappate in DTO
-    @Operation(summary = "Elenca tutte le sale", description = "Restituisce la lista completa delle sale cinematografiche registrate a sistema e le relative capienze.")
+    @Operation(
+            summary = "Elenca tutte le sale",
+            description = "Restituisce la lista completa delle sale cinematografiche registrate a sistema e le relative capienze."
+    )
     @GetMapping
     public ResponseEntity<List<RoomResponseDto>> getAllRooms() {
         List<RoomResponseDto> rooms = roomService.getAllRooms().stream()
@@ -46,7 +52,10 @@ public class RoomController {
     }
 
     // GET /api/rooms/{id} - Restituisce una singola sala mappata in DTO
-    @Operation(summary = "Dettaglio singola sala", description = "Recupera i dati e la disposizione di una sala specifica tramite il suo ID identificativo.")
+    @Operation(
+            summary = "Dettaglio singola sala",
+            description = "Recupera i dati e la disposizione di una sala specifica tramite il suo ID identificativo."
+    )
     @GetMapping("/{id}")
     public ResponseEntity<RoomResponseDto> getRoomById(@PathVariable Long id) {
         Room room = roomService.getRoomById(id);

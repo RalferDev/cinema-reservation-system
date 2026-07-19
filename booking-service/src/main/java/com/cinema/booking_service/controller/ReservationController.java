@@ -18,7 +18,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/reservations")
 @RequiredArgsConstructor
-@Tag(name = "Prenotazioni", description = "API per l'acquisto di biglietti, verifica disponibilità, acquisti multipli e cancellazioni")
+@Tag(
+        name = "Prenotazioni",
+        description = "API per l'acquisto di biglietti, verifica disponibilità, acquisti multipli e cancellazioni"
+)
 public class ReservationController {
 
     private final BookingService bookingService;
@@ -52,7 +55,10 @@ public class ReservationController {
     }
 
     // GET /api/reservations/showtime/{showtimeId} - Restituisce tutte le prenotazioni per uno spettacolo
-    @Operation(summary = "Prenotazioni per spettacolo", description = "Restituisce l'elenco di tutti i biglietti già venduti per una specifica proiezione, utile per mappare la mappa dei posti occupati.")
+    @Operation(
+            summary = "Prenotazioni per spettacolo",
+            description = "Restituisce l'elenco di tutti i biglietti già venduti per una specifica proiezione, utile per mappare la mappa dei posti occupati."
+    )
     @GetMapping("/showtime/{showtimeId}")
     public ResponseEntity<List<ReservationResponseDto>> getReservationsByShowtime(@PathVariable Long showtimeId) {
         List<ReservationResponseDto> reservations = bookingService.getReservationsByShowtime(showtimeId).stream()
@@ -62,7 +68,10 @@ public class ReservationController {
     }
 
     // GET /api/reservations/{id} - Restituisce i dettagli di una singola prenotazione
-    @Operation(summary = "Dettaglio prenotazione", description = "Recupera i dati e lo stato di una prenotazione esistente tramite il suo codice ID unico.")
+    @Operation(
+            summary = "Dettaglio prenotazione",
+            description = "Recupera i dati e lo stato di una prenotazione esistente tramite il suo codice ID unico."
+    )
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponseDto> getReservationById(@PathVariable Long id) {
         Reservation reservation = bookingService.getReservationById(id);
@@ -70,7 +79,10 @@ public class ReservationController {
     }
 
     // GET /api/reservations/availability?showtimeId=1&seatId=5 - Verifica disponibilità posto
-    @Operation(summary = "Verifica disponibilità posto", description = "Controlla in tempo reale se un determinato numero di poltrona è ancora libero e prenotabile per un target spettacolo.")
+    @Operation(
+            summary = "Verifica disponibilità posto",
+            description = "Controlla in tempo reale se un determinato numero di poltrona è ancora libero e prenotabile per un target spettacolo."
+    )
     @GetMapping("/availability")
     public ResponseEntity<Boolean> checkAvailability(@RequestParam Long showtimeId, @RequestParam Long seatId) {
         boolean available = bookingService.isSeatAvailable(showtimeId, seatId);
@@ -78,7 +90,10 @@ public class ReservationController {
     }
 
     // DELETE /api/reservations/{id} - Cancella una prenotazione
-    @Operation(summary = "Cancella prenotazione", description = "Annulla una prenotazione esistente e libera immediatamente il posto associato, rendendolo di nuovo disponibile per l'acquisto.")
+    @Operation(
+            summary = "Cancella prenotazione",
+            description = "Annulla una prenotazione esistente e libera immediatamente il posto associato, rendendolo di nuovo disponibile per l'acquisto."
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         bookingService.deleteReservation(id);

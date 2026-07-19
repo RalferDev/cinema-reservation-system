@@ -23,7 +23,10 @@ public class MovieController {
     private final MovieService movieService;
 
     // POST /api/movies - Aggiunge un nuovo film al catalogo
-    @Operation(summary = "Aggiunge un film", description = "Inserisce un nuovo film nel catalogo definendo titolo, genere, durata in minuti, trama e link alla locandina.")
+    @Operation(
+            summary = "Aggiunge un film",
+            description = "Inserisce un nuovo film nel catalogo definendo titolo, genere, durata in minuti, trama e link alla locandina."
+    )
     @PostMapping
     public ResponseEntity<MovieResponseDto> createMovie(@RequestBody MovieRequestDto request) {
         Movie movieToSave = Movie.builder()
@@ -40,7 +43,10 @@ public class MovieController {
     }
 
     // GET /api/movies - Restituisce tutti i film
-    @Operation(summary = "Elenca tutti i film", description = "Restituisce l'elenco completo dei film disponibili nel catalogo del cinema.")
+    @Operation(
+            summary = "Elenca tutti i film",
+            description = "Restituisce l'elenco completo dei film disponibili nel catalogo del cinema."
+    )
     @GetMapping
     public ResponseEntity<List<MovieResponseDto>> getAllMovies() {
         List<MovieResponseDto> movies = movieService.getAllMovies().stream()
@@ -50,7 +56,10 @@ public class MovieController {
     }
 
     // GET /api/movies/{id} - Restituisce un singolo film
-    @Operation(summary = "Dettaglio singolo film", description = "Recupera le informazioni complete di un film specifico a partire dal suo ID.")
+    @Operation(
+            summary = "Dettaglio singolo film",
+            description = "Recupera le informazioni complete di un film specifico a partire dal suo ID."
+    )
     @GetMapping("/{id}")
     public ResponseEntity<MovieResponseDto> getMovieById(@PathVariable Long id) {
         Movie movie = movieService.getMovieById(id);
