@@ -6,6 +6,7 @@ import com.cinema.booking_service.entity.Reservation;
 import com.cinema.booking_service.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ReservationController {
             description = "Crea una nuova prenotazione per uno spettacolo. Se il parametro 'seatId' viene specificato, prenota quel posto esatto (dopo averne verificato la disponibilità). Se 'seatId' viene omesso o inviato come null, il sistema assegna automaticamente il primo posto libero disponibile nella sala."
     )
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto request) {
+    public ResponseEntity<ReservationResponseDto> createReservation(@Valid @RequestBody ReservationRequestDto request) {
         Reservation reservation;
 
         if (request.getSeatId() == null) {
@@ -90,7 +91,7 @@ public class ReservationController {
             description = "Consente di prenotare contemporaneamente più posti o più spettacoli in una singola transazione atomica. Se anche un solo posto richiesto risulta occupato, l'intera operazione viene annullata per evitare acquisti parziali."
     )
     @PostMapping("/batch")
-    public ResponseEntity<List<ReservationResponseDto>> createBatchReservations(@RequestBody List<ReservationRequestDto> requests) {
+    public ResponseEntity<List<ReservationResponseDto>> createBatchReservations(@Valid @RequestBody List<ReservationRequestDto> requests) {
         List<Reservation> reservations = bookingService.createBatchReservations(requests);
         List<ReservationResponseDto> response = reservations.stream()
                 .map(ReservationResponseDto::fromEntity)
