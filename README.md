@@ -15,3 +15,16 @@ Per facilitare la valutazione e l'esecuzione locale, l'intero strato di persiste
 3. Avvia i database PostgreSQL isolati per i due servizi:
    ```bash
    docker-compose up -d
+
+## Prerequisiti e Setup Java
+Per facilitare la valutazione consiglio di utilizzare IntellijIDEA come ide e avviare i due microservizi **catalog-service** e **booking-service** tramite un click sul play button presente sul lato sinistro della loro rispettiva classe principale (CatalogServiceApplication.java - BookingServiceApplication.java).
+
+In alternativa bisognerà installare globalmente:
+
+1. Java Development Kit (JDK): Versione 17 o superiore.
+2. Apache Maven: Versione 3.8 o superiore.
+
+Una volta effettuate le opportune installazioni aprire un terminale nelle cartelle principali dei due microservizi sopra citati e usare i comandi
+```bash
+mvn clean install
+mvn spring-boot:run
